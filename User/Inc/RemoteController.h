@@ -11,7 +11,7 @@ enum Switch { UP = 1, DOWN, MID };
 
 class RemoteController {
 private:
-    static constexpr size_t RX_DMA_BUFFER_SIZE = 512;
+    static constexpr size_t RX_DMA_BUFFER_SIZE = 540;
     static constexpr size_t FRAME_SIZE = 18;
     static constexpr uint32_t TIMEOUT = 100; // 超时时间 ms
 
@@ -25,7 +25,7 @@ private:
     osMutexId_t data_mutex_ = nullptr;
     osThreadId_t task_handle_ = nullptr;
 
-    struct Data {
+    struct RCData {
         float ch0 = 0.0f, ch1 = 0.0f, ch2 = 0.0f, ch3 = 0.0f;
         Switch s1 = UP, s2 = UP;
         int16_t mouse_x = 0, mouse_y = 0, mouse_z = 0;
@@ -40,10 +40,10 @@ private:
     void parseData(); // 解包
     void taskEntry(); // 任务入口函数
 public:
-    void init();
-    void handleFromIT(uint16_t Size);
+    void RCInit(const osThreadAttr_t* thread_attr);
+    void ITcallback(uint16_t Size);
     bool connectState();
-    Data getData();
+    RCData getData();
     RemoteController(UART_HandleTypeDef* huart);
 };
 

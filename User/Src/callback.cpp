@@ -14,6 +14,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
 
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef* huart, uint16_t Size) {
     if (huart == &huart3) {
-        remote_controller.handleFromIT(Size);
+        remote_controller.ITcallback(Size);
     }
 }

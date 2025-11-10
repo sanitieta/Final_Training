@@ -44,7 +44,7 @@ void RemoteController::taskEntry() {
     }
 }
 
-void RemoteController::init() {
+void RemoteController::RCInit(const osThreadAttr_t* thread_attr) {
     data_ready_semaphore_ = osSemaphoreNew(1, 0, nullptr); // 创建信号量
     data_mutex_ = osMutexNew(nullptr); // 创建互斥锁
 
@@ -53,13 +53,13 @@ void RemoteController::init() {
         RemoteController* self = static_cast<RemoteController*>(arg);
         self->taskEntry();
     };
-    task_handle_ = osThreadNew(wrapper, this, nullptr);
+    task_handle_ = osThreadNew(wrapper, this, thread_attr);
     // 启动DMA接收
     HAL_UARTEx_ReceiveToIdle_DMA(huart_, rx_dma_buffer_, RX_DMA_BUFFER_SIZE);
 }
 
 // 中断回调函数
-void RemoteController::handleFromIT(uint16_t Size) {
+void RemoteController::ITcallback(uint16_t Size) {
     if (Size == FRAME_SIZE) {
         memcpy(rx_data_, rx_dma_buffer_, FRAME_SIZE);
         last_rx_tick_ = HAL_GetTick(); // 更新最后接收时间戳
@@ -79,8 +79,8 @@ bool RemoteController::connectState() {
     return isConnected_;
 }
 
-RemoteController::Data RemoteController::getData() {
-    Data copy;
+RemoteController::RCData RemoteController::getData() {
+    RCData copy;
     osMutexAcquire(data_mutex_,osWaitForever); // 获取数据互斥锁
     copy = data_;
     osMutexRelease(data_mutex_);
