@@ -42,7 +42,15 @@ add_executable(${CMAKE_PROJECT_NAME}
         User/Src/IST8310.cpp
         User/Src/RemoteController.cpp
         User/Src/Init.cpp
-        User/Inc/Init.h)
+        User/Inc/Init.h
+        User/Src/CanTxManager.cpp
+        User/Inc/CanTxManager.h
+        User/Src/MotorBase.cpp
+        User/Inc/MotorBase.h
+        User/Src/M3508Motor.cpp
+        User/Inc/M3508Motor.h
+        User/Src/M6020Motor.cpp
+        User/Src/M6020Motor.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)

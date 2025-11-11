@@ -67,6 +67,7 @@ private:
     ControlMethod control_method_;
     ControlMethod prev_method_ = TORQUE;
 
+private:
     static float LinearMapping(int in, int in_min, int in_max, float out_min, float out_max);
     void SetCurrent(float current);
     float FeedforwardTorqueCalc(float current_angle);
