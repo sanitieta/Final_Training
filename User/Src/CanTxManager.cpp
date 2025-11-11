@@ -3,3 +3,8 @@
 //
 
 #include "CanTxManager.h"
+
+CanTxManager& CanTxManager::instance() {
+    static CanTxManager instance;
+    return instance;
+}

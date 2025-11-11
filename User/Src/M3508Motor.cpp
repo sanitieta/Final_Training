@@ -5,6 +5,7 @@
 #include "M3508Motor.h"
 #include <cstring>
 #include "CanTxManager.h"
+
 M3508Motor::M3508Motor(uint8_t escid, float ratio, ControlMethod control_method):
     escid_(escid),
     ratio_(ratio),
@@ -109,7 +110,8 @@ float M3508Motor::ComputeOutput() {
 }
 
 void M3508Motor::EnqueueCurrentCommand(int16_t current_cmd) {
-
+    auto& can_manager = CanTxManager::instance();
+    can_manager.enqueue(escid_, current_cmd);
 }
 
 void M3508Motor::setTorque(float torque) {

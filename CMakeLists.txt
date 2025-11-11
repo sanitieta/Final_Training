@@ -50,7 +50,7 @@ add_executable(${CMAKE_PROJECT_NAME}
         User/Src/M3508Motor.cpp
         User/Inc/M3508Motor.h
         User/Src/M6020Motor.cpp
-        User/Src/M6020Motor.h
+        User/Inc/M6020Motor.h
         User/Src/MotorManager.cpp
         User/Inc/MotorManager.h)
 
