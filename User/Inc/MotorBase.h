@@ -8,6 +8,7 @@
 #include "stm32f4xx_hal.h"
 #include "cmsis_os2.h"
 #include "pid.h"
+#include "CanTxManager.h"
 
 enum ControlMethod {
     TORQUE,
@@ -21,6 +22,7 @@ public:
     virtual void CanRxCallback(const uint8_t rxdata[8]) = 0;
     virtual void handle() = 0;
     virtual uint8_t getId() const = 0;
+    virtual MotorType getType() const = 0;
     virtual void setTorque(float torque) = 0;
     virtual void setSpeed(float target_speed, float ff_intensity) = 0;
     virtual void setPosition(float target_pos, float ff_speed, float ff_intensity) = 0;
