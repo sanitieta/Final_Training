@@ -109,9 +109,9 @@ float M3508Motor::ComputeOutput() {
     return output;
 }
 
-void M3508Motor::EnqueueCurrentCommand(int16_t current_cmd) {
+void M3508Motor::EnqueueCurrentCommand(float current_cmd) {
     auto& can_manager = CanTxManager::instance();
-    can_manager.enqueue(escid_, current_cmd);
+    can_manager.SetMotorCurrent(escid_, current_cmd, MotorType::M3508);
 }
 
 void M3508Motor::setTorque(float torque) {

@@ -25,7 +25,7 @@ private:
     void ProcessRxQueue();
     void ParseRxData(const uint8_t rxdata[8]);
     float ComputeOutput();
-    void EnqueueCurrentCommand(int16_t current_cmd);
+    void EnqueueCurrentCommand(float current_cmd);
     static float LinearMapping(int in, int in_min, int in_max, float out_min, float out_max);
     float TorqueToCurrent(float torque) const;
 

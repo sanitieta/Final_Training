@@ -52,7 +52,9 @@ add_executable(${CMAKE_PROJECT_NAME}
         User/Src/M6020Motor.cpp
         User/Inc/M6020Motor.h
         User/Src/MotorManager.cpp
-        User/Inc/MotorManager.h)
+        User/Inc/MotorManager.h
+        User/Src/usertasks.cpp
+        User/Inc/usertasks.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)

@@ -6,13 +6,16 @@
 
 #include "IMU.h"
 #include "usart.h"
-#include "motor.h"
 #include "RemoteController.h"
+#include "MotorManager.h"
+#include "MotorBase.h"
+#include "M3508Motor.h"
+#include "M6020Motor.h"
 
 RemoteController remote_controller(&huart3);
 IMU imu;
-Motor motor_yaw(1, 3591.0f / 187, POSITION_SPEED);
-Motor motor_pitch(2, 3591.0f / 187, POSITION_SPEED);
+M3508Motor motor_yaw(1, 3591.0f / 187, POSITION_SPEED);
+// M6020Motor motor_pitch(2, 3591.0f / 187, POSITION_SPEED);
 
 osThreadAttr_t remote_control_attr = {
     .name = "RemoteController_Task",
@@ -24,10 +27,8 @@ osThreadAttr_t imu_task_attr = {
     .stack_size = 1024 * 4,
     .priority = osPriorityNormal,
 };
-osThreadAttr_t motor_task_attr = {
-    .name =
-}
-void SystemInit(void) {
-    remote_controller.RCInit(&remote_control_attr);
+
+void MyInit(void) {
+    // remote_controller.RCInit(&remote_control_attr);
     imu.ImuInit(&imu_task_attr);
 }
