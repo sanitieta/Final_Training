@@ -45,7 +45,6 @@ add_executable(${CMAKE_PROJECT_NAME}
         User/Inc/myInit.h
         User/Src/CanTxManager.cpp
         User/Inc/CanTxManager.h
-        User/Src/MotorBase.cpp
         User/Inc/MotorBase.h
         User/Src/M3508Motor.cpp
         User/Inc/M3508Motor.h

@@ -18,7 +18,7 @@ M3508Motor::M3508Motor(uint8_t escid, float ratio, ControlMethod control_method)
 void M3508Motor::CanRxCallback(const uint8_t rxdata[8]) {
     uint8_t msg_copy[8];
     memcpy(msg_copy, rxdata, 8);
-    osMessageQueuePut(rx_queue_, msg_copy, 0, 0);
+    osMessageQueuePut(rx_queue_, rxdata, 0, 0);
 }
 
 void M3508Motor::handle() {
@@ -101,11 +101,11 @@ float M3508Motor::ComputeOutput() {
     }
     // 根据角度更新前馈力矩
     output = output_torque_ + feedforward_torque_;
+    osMutexRelease(data_mutex_);
     // 过热保护 & 停止保护
     if (overheat_flag_ || stop_flag_) {
         output = 0.0f;
     }
-    osMutexRelease(data_mutex_);
     return output;
 }
 
@@ -139,6 +139,11 @@ void M3508Motor::setPosition(float target_pos, float ff_speed, float ff_torque) 
         this->feedforward_torque_ = ff_torque;
         osMutexRelease(data_mutex_);
     }
+}
+
+void M3508Motor::MotorRtosInit() {
+    rx_queue_ = osMessageQueueNew(24, 1, nullptr);
+    data_mutex_ = osMutexNew(nullptr);
 }
 
 float M3508Motor::LinearMapping(int in, int in_min, int in_max, float out_min, float out_max) {

@@ -13,6 +13,7 @@ public:
 
     void addMotor(MotorBase* motor);
     MotorBase* getMotorById(uint8_t id);
+    void MotorRtosInitAll();
     void handleAll(); // 在任务中周期性调用所有motor的handle
 
 private:

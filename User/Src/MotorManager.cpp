@@ -21,6 +21,11 @@ MotorBase* MotorManager::getMotorById(uint8_t id) {
     }
     return nullptr;
 }
+void MotorManager::MotorRtosInitAll() {
+    for (auto* motor: motors_) {
+        motor->MotorRtosInit();
+    }
+}
 
 void MotorManager::handleAll() {
     for (auto* motor: motors_) { motor->handle(); }

@@ -118,9 +118,9 @@ void IMU::Gyro::gyro_calibrate(size_t calibration_count, size_t calibration_tota
     yaw_rate_bias_ += wz;
 
     if (calibration_count == calibration_total) {
-        roll_rate_bias_ /= calibration_total;
-        pitch_rate_bias_ /= calibration_total;
-        yaw_rate_bias_ /= calibration_total;
+        roll_rate_bias_ /= static_cast<float>(calibration_total);
+        pitch_rate_bias_ /= static_cast<float>(calibration_total);
+        yaw_rate_bias_ /= static_cast<float>(calibration_total);
     }
 }
 
