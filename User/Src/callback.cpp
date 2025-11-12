@@ -17,8 +17,8 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
         if (message_header.StdId >= 0x205 && message_header.StdId <= 0x20B) {
             // 6020电机消息
             auto motor_id = static_cast<uint8_t>(message_header.StdId - 0x204);
-            auto *motor = motor_manager.getMotorById(motor_id);
-            motor->CanRxCallback(rx_data);
+            auto* motor = motor_manager.getMotorById(motor_id);
+            if (motor != nullptr) { motor->CanRxCallback(rx_data); }
         }
     }
 }

@@ -17,10 +17,9 @@
 // volatile uint8_t tmp1 = 0;
 // volatile uint8_t tmp2 = 0;
 
-auto canmanager = CanTxManager::instance();
 RemoteController remote_controller(&huart3);
 IMU imu;
-M6020Motor motor_yaw(1, 1.0f, TORQUE);
+M6020Motor motor_yaw(4, 1.0f, POSITION_SPEED);
 // M6020Motor motor_pitch(2, 1.0f, POSITION_SPEED);
 
 osThreadAttr_t remote_control_attr = {
@@ -35,7 +34,7 @@ osThreadAttr_t imu_task_attr = {
 };
 osThreadAttr_t motor_manager_attr = {
     .name = "MotorManager_Task",
-    .stack_size = 2048 * 4,
+    .stack_size = 1024 * 4,
     .priority = osPriorityAboveNormal,
 };
 osThreadAttr_t can_tx_manager_task_attr = {
@@ -56,7 +55,7 @@ CAN_FilterTypeDef hcan1_filter = {
 };
 
 void myInit(void) {
-    remote_controller.RCInit(&remote_control_attr);
+    // remote_controller.RCInit(&remote_control_attr);
     // imu.ImuRtosInit(&imu_task_attr);
     // CAN 初始化
     HAL_CAN_ConfigFilter(&hcan1, &hcan1_filter);

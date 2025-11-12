@@ -54,7 +54,6 @@ add_executable(${CMAKE_PROJECT_NAME}
         User/Inc/MotorManager.h
         User/Src/usertasks.cpp
         User/Inc/usertasks.h
-        User/Inc/stm32_vector_static.h
 )
 
 # Add STM32CubeMX generated sources

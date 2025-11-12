@@ -5,7 +5,6 @@
 #ifndef FINAL_MOTORMANAGER_H
 #define FINAL_MOTORMANAGER_H
 #include "MotorBase.h"
-#include "stm32_vector_static.h"
 #include <cmsis_os2.h>
 
 class MotorManager {
@@ -20,7 +19,8 @@ public:
     void MotorManagerRTOSInit(const osThreadAttr_t* attr);
 
 private:
-    Vector<MotorBase*, 8> motors_;
+    static MotorBase* motors_[8];
+    uint8_t motor_count_ = 0;
     osThreadId_t MotorManagerThread = nullptr;
     void taskEntry(); // 任务入口函数
 };

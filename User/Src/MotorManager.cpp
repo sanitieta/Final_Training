@@ -11,34 +11,40 @@ MotorManager& MotorManager::instance() {
 }
 
 void MotorManager::addMotor(MotorBase* motor) {
-    motors_.push_back(motor);
+    if (motor_count_ < 8) { motors_[motor_count_++] = motor; }
 }
 
 MotorBase* MotorManager::getMotorById(uint8_t id) {
-    for (auto* motor: motors_) {
-        if (motor->getId() == id) {
-            return motor;
+    for (uint8_t i = 0; i < motor_count_; i++) {
+        if (motors_[i]->getId() == id) {
+            return motors_[i];
         }
     }
     return nullptr;
 }
 
 void MotorManager::RTOSInitAllMotor() {
-    for (auto* motor: motors_) {
-        motor->MotorRtosInit();
+    for (uint8_t i = 0; i < motor_count_; i++) {
+        motors_[i]->MotorRtosInit();
     }
 }
 
 void MotorManager::handleAll() {
-    for (auto* motor: motors_) { motor->handle(); }
+    for (uint8_t i = 0; i < motor_count_; i++) {
+        motors_[i]->handle();
+    }
 }
 
 void MotorManager::stopAll() {
-    for (auto* motor: motors_) { motor->stop(); }
+    for (uint8_t i = 0; i < motor_count_; i++) {
+        motors_[i]->stop();
+    }
 }
 
 void MotorManager::startAll() {
-    for (auto* motor: motors_) { motor->start(); }
+    for (uint8_t i = 0; i < motor_count_; i++) {
+        motors_[i]->start();
+    }
 }
 
 void MotorManager::taskEntry() {
@@ -55,3 +61,5 @@ void MotorManager::MotorManagerRTOSInit(const osThreadAttr_t* attr) {
     };
     MotorManagerThread = osThreadNew(wrapper, this, attr);
 }
+
+MotorBase* MotorManager::motors_[8] = { nullptr };
