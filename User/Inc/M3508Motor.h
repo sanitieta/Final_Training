@@ -7,6 +7,7 @@
 
 #include "CanTxManager.h"
 #include "MotorBase.h"
+#include "pid.h"
 
 class M3508Motor: public MotorBase {
 public:
@@ -47,10 +48,10 @@ private:
     bool can_init_flag_ = true; // 初始化标志
     bool stop_flag_ = true; // 停止标志
     // 电机限制参数
-    float MAX_CURRENT = 10.0f; // 最大电流限制 C620
-    float MAX_SPEED = 1500.0f; // 最大转速限制
-    float MAX_TEMP = 85.0f; // 最大温度限制
-    float WARN_TEMP = 70.0f; // 警告温度限制
+    const float MAX_CURRENT = 10.0f; // 最大电流限制 C620
+    const float MAX_SPEED = 1500.0f; // 最大转速限制
+    const float MAX_TEMP = 85.0f; // 最大温度限制
+    const float WARN_TEMP = 70.0f; // 警告温度限制
     // PID
     PID spid_, ppid_;
     float target_angle_ = 0.0f, fdb_angle_ = 0.0f; // 角度控制用

@@ -53,7 +53,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         User/Src/MotorManager.cpp
         User/Inc/MotorManager.h
         User/Src/usertasks.cpp
-        User/Inc/usertasks.h)
+        User/Inc/usertasks.h
+        User/Src/stm32_vector_static.hpp)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)

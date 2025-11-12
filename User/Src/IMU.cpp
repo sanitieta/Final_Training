@@ -151,7 +151,7 @@ void IMU::ImuRtosInit(const osThreadAttr_t* thread_attr) {
     ist8310_data_mutex_ = osMutexNew(nullptr); // 创建IST8310数据互斥锁
     euler_mutex_ = osMutexNew(nullptr); // 创建欧拉角互斥锁
     auto wapper = [](void* arg) {
-        IMU* self = static_cast<IMU*>(arg);
+        auto* self = static_cast<IMU*>(arg);
         self->taskEntry();
     }; // 包装一下taskEntry() 以适应osThreadNew的参数要求
     imu_task_handle_ = osThreadNew(wapper, this, thread_attr);

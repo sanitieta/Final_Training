@@ -6,21 +6,15 @@
 #define FINAL_CANTXMANAGER_H
 #include <stm32f4xx_hal.h>
 #include <cmsis_os2.h>
-
-enum class MotorType {
-    M3508,
-    M6020,
-};
-
+#include "MotorBase.h"
 
 class CanTxManager {
 public:
     static CanTxManager& instance();
-    void CanTxInit(const osThreadAttr_t* attr);
+    void CanTxRtosInit(const osThreadAttr_t* attr);
     void SetMotorCurrent(uint8_t motor_id, float current_cmd, MotorType motor_type);
-
 private:
-    void task_entry();
+    void taskEntry();
     void sendCanMessages();
 
     osMutexId_t data_mutex_ = nullptr;
@@ -29,7 +23,11 @@ private:
     float motor_currents_3508[8] = { 0 };
     float motor_currents_6020[8] = { 0 };
 
-    static constexpr uint32_t TX_PERIOD_MS = 1;
+    const uint32_t TX_PERIOD_MS = 1;
+    const uint32_t M3508_STDID_1_4 = 0x200;
+    const uint32_t M3508_STDID_5_8 = 0x1FF;
+    const uint32_t M6020_STDID_1_4 = 0X1FE;
+    const uint32_t M6020_STDID_5_7 = 0X2FE;
 
     CAN_TxHeaderTypeDef header_3508 = {
         .IDE = CAN_ID_STD,

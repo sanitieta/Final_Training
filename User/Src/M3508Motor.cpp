@@ -1,10 +1,11 @@
 //
 // Created by xuhao on 2025/11/11.
 //
-
+#include <cmsis_os2.h>
 #include "M3508Motor.h"
 #include <cstring>
 #include "CanTxManager.h"
+#include "pid.h"
 
 M3508Motor::M3508Motor(uint8_t escid, float ratio, ControlMethod control_method):
     escid_(escid),
@@ -110,6 +111,11 @@ float M3508Motor::ComputeOutput() {
 }
 
 void M3508Motor::EnqueueCurrentCommand(float current_cmd) {
+    if (current_cmd > MAX_CURRENT) {
+        current_cmd = MAX_CURRENT;
+    } else if (current_cmd < -MAX_CURRENT) {
+        current_cmd = -MAX_CURRENT;
+    }
     auto& can_manager = CanTxManager::instance();
     can_manager.SetMotorCurrent(escid_, current_cmd, MotorType::M3508);
 }

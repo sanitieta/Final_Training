@@ -51,7 +51,7 @@ void RemoteController::RCInit(const osThreadAttr_t* thread_attr) {
     data_mutex_ = osMutexNew(nullptr); // 创建互斥锁
     // 包装一下taskEntry() 以适应osThreadNew的参数要求
     auto wrapper = [](void* arg) {
-        RemoteController* self = static_cast<RemoteController*>(arg);
+        auto* self = static_cast<RemoteController*>(arg);
         self->taskEntry();
     };
     task_handle_ = osThreadNew(wrapper, this, thread_attr);

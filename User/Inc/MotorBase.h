@@ -6,15 +6,10 @@
 #define FINAL_MOTORBASE_H
 
 #include "stm32f4xx_hal.h"
-#include "cmsis_os2.h"
-#include "pid.h"
-#include "CanTxManager.h"
 
-enum ControlMethod {
-    TORQUE,
-    SPEED,
-    POSITION_SPEED,
-};
+enum ControlMethod { TORQUE, SPEED, POSITION_SPEED, };
+
+enum class MotorType { M3508, M6020, };
 
 class MotorBase {
 public:

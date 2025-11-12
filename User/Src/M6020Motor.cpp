@@ -1,10 +1,11 @@
 //
 // Created by xuhao on 2025/11/11.
 //
-
+#include <cmsis_os2.h>
 #include "M6020Motor.h"
 #include <cstring>
 #include "CanTxManager.h"
+#include "pid.h"
 
 M6020Motor::M6020Motor(uint8_t escid, float ratio, ControlMethod control_method):
     escid_(escid),
@@ -31,7 +32,7 @@ void M6020Motor::handle() {
 }
 
 void M6020Motor::ProcessRxQueue() {
-    uint8_t msg[8]{0};
+    uint8_t msg[8]{ 0 };
     while (osMessageQueueGet(rx_queue_, msg, nullptr, 0) == osOK) {
         ParseRxData(msg);
     }
@@ -110,6 +111,11 @@ float M6020Motor::ComputeOutput() {
 }
 
 void M6020Motor::EnqueueCurrentCommand(float current_cmd) {
+    if (current_cmd > MAX_CURRENT) {
+        current_cmd = MAX_CURRENT;
+    } else if (current_cmd < -MAX_CURRENT) {
+        current_cmd = -MAX_CURRENT;
+    }
     auto& can_manager = CanTxManager::instance();
     can_manager.SetMotorCurrent(escid_, current_cmd, MotorType::M6020);
 }
