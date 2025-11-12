@@ -660,11 +660,6 @@
               <FilePath>..\User\Src\motor.cpp</FilePath>
             </File>
             <File>
-              <FileName>MotorBase.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\User\Src\MotorBase.cpp</FilePath>
-            </File>
-            <File>
               <FileName>MotorManager.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\User\Src\MotorManager.cpp</FilePath>

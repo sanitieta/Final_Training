@@ -5,7 +5,7 @@
 #ifndef FINAL_MOTORMANAGER_H
 #define FINAL_MOTORMANAGER_H
 #include "MotorBase.h"
-#include "stm32_vector_static.hpp"
+#include "stm32_vector_static.h"
 #include <cmsis_os2.h>
 
 class MotorManager {

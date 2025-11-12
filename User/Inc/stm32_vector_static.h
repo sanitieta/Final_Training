@@ -6,8 +6,8 @@
 // Uses static buffer with fixed maximum capacity (defined at compile time).
 // No dynamic allocation or exceptions.
 
-#ifndef STM32_VECTOR_STATIC_HPP
-#define STM32_VECTOR_STATIC_HPP
+#ifndef STM32_VECTOR_STATIC_H
+#define STM32_VECTOR_STATIC_H
 
 #include <cstddef>
 #include <new>
@@ -147,7 +147,7 @@ private:
     }
 };
 
-#endif // STM32_VECTOR_STATIC_HPP
+#endif // STM32_VECTOR_STATIC_H
 
 /* Example usage:
 
