@@ -17,6 +17,7 @@ public:
     void CanRxCallback(const uint8_t rxdata[8]) override;
     void handle() override;
     void stop() override;
+    void start() override;
     uint8_t getId() const override { return escid_; }
     MotorType getType() const override { return MotorType::M3508; }
     void setTorque(float torque) override;

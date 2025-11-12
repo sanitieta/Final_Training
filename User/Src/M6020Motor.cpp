@@ -36,6 +36,10 @@ void M6020Motor::stop() {
     EnqueueCurrentCommand(0.0f);
 }
 
+void M6020Motor::start() {
+    this->stop_flag_ = false;
+}
+
 void M6020Motor::ProcessRxQueue() {
     uint8_t msg[8]{ 0 };
     while (osMessageQueueGet(rx_queue_, msg, nullptr, 0) == osOK) {

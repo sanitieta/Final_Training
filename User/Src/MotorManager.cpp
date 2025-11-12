@@ -37,6 +37,10 @@ void MotorManager::stopAll() {
     for (auto* motor: motors_) { motor->stop(); }
 }
 
+void MotorManager::startAll() {
+    for (auto* motor: motors_) { motor->start(); }
+}
+
 void MotorManager::taskEntry() {
     while (true) {
         handleAll();

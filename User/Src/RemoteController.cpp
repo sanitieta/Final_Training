@@ -36,13 +36,15 @@ void RemoteController::parseData() {
 }
 
 void RemoteController::taskEntry() {
+    // 启动DMA接收
+    HAL_UARTEx_ReceiveToIdle_DMA(huart_, rx_dma_buffer_, RX_DMA_BUFFER_SIZE);
     while (true) {
         // 等待数据准备好信号量
         if (osSemaphoreAcquire(data_ready_semaphore_, osWaitForever) == osOK) {
             parseData(); // 解析数据
         }
         connectState(); // 检查连接状态
-        osDelay(1);
+        osDelay(10);
     }
 }
 
@@ -55,8 +57,7 @@ void RemoteController::RCInit(const osThreadAttr_t* thread_attr) {
         self->taskEntry();
     };
     task_handle_ = osThreadNew(wrapper, this, thread_attr);
-    // 启动DMA接收
-    HAL_UARTEx_ReceiveToIdle_DMA(huart_, rx_dma_buffer_, RX_DMA_BUFFER_SIZE);
+
 }
 
 // 中断回调函数

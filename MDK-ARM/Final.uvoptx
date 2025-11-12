@@ -175,6 +175,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>tmp0</ItemText>
         </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>remote_controller</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>

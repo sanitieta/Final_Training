@@ -26,7 +26,7 @@ M6020Motor motor_yaw(1, 1.0f, TORQUE);
 osThreadAttr_t remote_control_attr = {
     .name = "RemoteController_Task",
     .stack_size = 1024 * 4,
-    .priority = osPriorityHigh,
+    .priority = osPriorityNormal,
 };
 osThreadAttr_t imu_task_attr = {
     .name = "IMU_Task",
@@ -56,7 +56,7 @@ CAN_FilterTypeDef hcan1_filter = {
 };
 
 void myInit(void) {
-    // remote_controller.RCInit(&remote_control_attr);
+    remote_controller.RCInit(&remote_control_attr);
     // imu.ImuRtosInit(&imu_task_attr);
     // CAN 初始化
     HAL_CAN_ConfigFilter(&hcan1, &hcan1_filter);

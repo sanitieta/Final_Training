@@ -19,6 +19,7 @@ public:
     uint8_t getId() const override { return escid_; }
     MotorType getType() const override { return MotorType::M6020; }
     void stop() override;
+    void start() override;
     void setTorque(float torque) override;
     void setSpeed(float target_speed, float ff_torque) override;
     void setPosition(float target_pos, float ff_speed, float ff_torque) override;

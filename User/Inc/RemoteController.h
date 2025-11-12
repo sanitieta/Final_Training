@@ -11,7 +11,7 @@ enum Switch { UP = 1, DOWN, MID };
 
 class RemoteController {
 private:
-    static constexpr size_t RX_DMA_BUFFER_SIZE = 540;
+    static constexpr size_t RX_DMA_BUFFER_SIZE = 18;
     static constexpr size_t FRAME_SIZE = 18;
     static constexpr uint32_t TIMEOUT = 100; // 超时时间 ms
 
@@ -33,9 +33,7 @@ private:
         uint16_t key = 0;
     } data_;
 
-    static float normalize_channel(int16_t value) {
-        return (static_cast<float>(value) - 1024.0f) / 660.0f;
-    }
+    static float normalize_channel(int16_t value) { return (static_cast<float>(value) - 1024.0f) / 660.0f; }
 
     void parseData(); // 解包
     void taskEntry(); // 任务入口函数
