@@ -21,7 +21,7 @@ void CanTxManager::CanTxRtosInit(const osThreadAttr_t* attr) {
     CanTxThread = osThreadNew(wrapper, this, attr);
 }
 
-void CanTxManager::SetMotorCurrent(uint8_t motor_id, float current_cmd, MotorType motor_type) {
+void CanTxManager::SetMotorCurrent(uint8_t motor_id, int16_t current_cmd, MotorType motor_type) {
     if (motor_type == MotorType::M3508) {
         if (motor_id >= 1 && motor_id <= 8) {
             osMutexAcquire(data_mutex_, osWaitForever);
@@ -52,8 +52,8 @@ void CanTxManager::sendCanMessages() {
     osMutexAcquire(data_mutex_, osWaitForever);
     // 打包1-4号电机数据
     for (size_t i = 0; i < 4; i++) {
-        auto current_3508 = static_cast<int16_t>(motor_currents_3508[i] * 16384.0f / 20.0f);
-        auto current_6020 = static_cast<int16_t>(motor_currents_6020[i] * 16384.0f / 20.0f);
+        auto current_3508 = motor_currents_3508[i];
+        auto current_6020 = motor_currents_6020[i];
         // 限幅
         if (current_3508 > 16384)
             current_3508 = 16384;
@@ -72,8 +72,8 @@ void CanTxManager::sendCanMessages() {
     }
     // 打包5-8号电机数据
     for (size_t i = 4; i < 8; i++) {
-        auto current_3508 = static_cast<int16_t>(motor_currents_3508[i] * 16384.0f / 20.0f);
-        auto current_6020 = static_cast<int16_t>(motor_currents_6020[i] * 16384.0f / 20.0f);
+        auto current_3508 = motor_currents_3508[i];
+        auto current_6020 = motor_currents_6020[i];
         if (current_3508 > 16384)
             current_3508 = 16384;
         if (current_3508 < -16384)

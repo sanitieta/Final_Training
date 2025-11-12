@@ -117,7 +117,8 @@ void M3508Motor::EnqueueCurrentCommand(float current_cmd) {
         current_cmd = -MAX_CURRENT;
     }
     auto& can_manager = CanTxManager::instance();
-    can_manager.SetMotorCurrent(escid_, current_cmd, MotorType::M3508);
+    auto intensity = static_cast<int16_t>(current_cmd * 16384.0f / MAX_CURRENT);
+    can_manager.SetMotorCurrent(escid_, intensity, MotorType::M3508);
 }
 
 void M3508Motor::setTorque(float torque) {
@@ -148,7 +149,7 @@ void M3508Motor::setPosition(float target_pos, float ff_speed, float ff_torque) 
 }
 
 void M3508Motor::MotorRtosInit() {
-    rx_queue_ = osMessageQueueNew(24, 1, nullptr);
+    rx_queue_ = osMessageQueueNew(24, 8, nullptr);
     data_mutex_ = osMutexNew(nullptr);
 }
 

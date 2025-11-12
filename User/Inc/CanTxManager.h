@@ -12,7 +12,7 @@ class CanTxManager {
 public:
     static CanTxManager& instance();
     void CanTxRtosInit(const osThreadAttr_t* attr);
-    void SetMotorCurrent(uint8_t motor_id, float current_cmd, MotorType motor_type);
+    void SetMotorCurrent(uint8_t motor_id, int16_t current_cmd, MotorType motor_type);
 private:
     void taskEntry();
     void sendCanMessages();
@@ -20,8 +20,8 @@ private:
     osMutexId_t data_mutex_ = nullptr;
     osThreadId_t CanTxThread = nullptr;
 
-    float motor_currents_3508[8] = { 0 };
-    float motor_currents_6020[8] = { 0 };
+    int16_t motor_currents_3508[8] = { 0 };
+    int16_t motor_currents_6020[8] = { 0 };
 
     const uint32_t TX_PERIOD_MS = 1;
     const uint32_t M3508_STDID_1_4 = 0x200;

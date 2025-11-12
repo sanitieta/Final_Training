@@ -3,7 +3,7 @@
 //
 
 #include "../Inc/myInit.h"
-
+#include "stm32f4xx_hal.h"
 #include "IMU.h"
 #include "usart.h"
 #include "RemoteController.h"
@@ -11,6 +11,7 @@
 #include "MotorBase.h"
 #include "M3508Motor.h"
 #include "M6020Motor.h"
+#include "can.h"
 
 RemoteController remote_controller(&huart3);
 IMU imu;
@@ -33,10 +34,24 @@ osThreadAttr_t motor_manager_attr = {
     .priority = osPriorityHigh,
 };
 
+CAN_FilterTypeDef hcan1_filter = {
+    .FilterIdHigh = 0x0000,
+    .FilterIdLow = 0x0000,
+    .FilterMaskIdHigh = 0x0000,
+    .FilterMaskIdLow = 0x0000,
+    .FilterFIFOAssignment = CAN_FILTER_FIFO0,
+    .FilterBank = 0,
+    .FilterMode = CAN_FILTERMODE_IDMASK,
+    .FilterScale = CAN_FILTERSCALE_32BIT,
+    .FilterActivation = ENABLE,
+};
+
 void myInit(void) {
     // remote_controller.RCInit(&remote_control_attr);
     // imu.ImuRtosInit(&imu_task_attr);
-
+    HAL_CAN_ConfigFilter(&hcan1, &hcan1_filter);
+    HAL_CAN_Start(&hcan1);
+    HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
     auto& motor_manager = MotorManager::instance();
     motor_manager.MotorManagerRTOSInit(&motor_manager_attr);
     motor_manager.addMotor(&motor_yaw);
