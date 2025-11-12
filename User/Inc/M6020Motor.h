@@ -31,9 +31,10 @@ private:
     float TorqueToCurrent(float torque) const;
 
 private:
+    // 电机属性
     const uint8_t escid_; // 电调号（1-8）
     const float ratio_; // 减速比
-    const float torque_constant_ = 0.3f; // 力矩常数 Nm/A 已经包括减速比
+    const float torque_constant_ = 0.741f; // 力矩常数 Nm/A 已经包括减速比 M6020
 
     // 电机状态
     float angle_ = 0.0f; // 累计角度（考虑减速比）

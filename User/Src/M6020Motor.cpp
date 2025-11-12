@@ -31,7 +31,7 @@ void M6020Motor::handle() {
 }
 
 void M6020Motor::ProcessRxQueue() {
-    uint8_t msg[8]{};
+    uint8_t msg[8]{0};
     while (osMessageQueueGet(rx_queue_, msg, nullptr, 0) == osOK) {
         ParseRxData(msg);
     }
