@@ -18,6 +18,7 @@ public:
     virtual void handle() = 0;
     virtual uint8_t getId() const = 0;
     virtual MotorType getType() const = 0;
+    virtual void stop() = 0;
     virtual void setTorque(float torque) = 0;
     virtual void setSpeed(float target_speed, float ff_intensity) = 0;
     virtual void setPosition(float target_pos, float ff_speed, float ff_intensity) = 0;

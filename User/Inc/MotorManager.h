@@ -15,6 +15,7 @@ public:
     MotorBase* getMotorById(uint8_t id);
     void RTOSInitAllMotor();
     void handleAll(); // 在任务中周期性调用所有motor的handle
+    void stopAll(); // 停止所有电机
     void MotorManagerRTOSInit(const osThreadAttr_t* attr);
 
 private:

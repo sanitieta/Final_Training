@@ -30,6 +30,10 @@ void M3508Motor::handle() {
     // 发送控制命令
     EnqueueCurrentCommand(TorqueToCurrent(output));
 }
+void M3508Motor::stop() {
+    this->stop_flag_ = true;
+    EnqueueCurrentCommand(0.0f);
+}
 
 void M3508Motor::ProcessRxQueue() {
     uint8_t msg[8]{};

@@ -18,6 +18,7 @@ public:
     void handle() override;
     uint8_t getId() const override { return escid_; }
     MotorType getType() const override { return MotorType::M6020; }
+    void stop() override;
     void setTorque(float torque) override;
     void setSpeed(float target_speed, float ff_torque) override;
     void setPosition(float target_pos, float ff_speed, float ff_torque) override;
@@ -50,7 +51,7 @@ private:
     bool stop_flag_ = true; // 停止标志
     // 电机限制参数
     const float MAX_CURRENT = 3.0f; // 最大电流限制 M6020
-    const float MAX_SPEED = 500.0f; // 最大转速限制
+    const float MAX_SPEED = 330.0f; // 最大转速限制 M6020
     const float MAX_TEMP = 85.0f; // 最大温度限制
     const float WARN_TEMP = 70.0f; // 警告温度限制
     // PID

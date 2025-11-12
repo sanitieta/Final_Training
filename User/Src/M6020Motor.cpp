@@ -6,7 +6,7 @@
 #include <cstring>
 #include "CanTxManager.h"
 #include "pid.h"
-float tmp;
+
 M6020Motor::M6020Motor(uint8_t escid, float ratio, ControlMethod control_method):
     escid_(escid),
     ratio_(ratio),
@@ -27,9 +27,13 @@ void M6020Motor::handle() {
     ProcessRxQueue();
     /* 2. 计算控制量 */
     float output = ComputeOutput();
-    tmp = output;
     // 发送控制命令
     EnqueueCurrentCommand(TorqueToCurrent(output));
+}
+
+void M6020Motor::stop() {
+    this->stop_flag_ = true;
+    EnqueueCurrentCommand(0.0f);
 }
 
 void M6020Motor::ProcessRxQueue() {

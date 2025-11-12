@@ -4,6 +4,7 @@
 
 #include "MotorManager.h"
 #include <cmsis_os2.h>
+
 MotorManager& MotorManager::instance() {
     static MotorManager instance;
     return instance;
@@ -21,6 +22,7 @@ MotorBase* MotorManager::getMotorById(uint8_t id) {
     }
     return nullptr;
 }
+
 void MotorManager::RTOSInitAllMotor() {
     for (auto* motor: motors_) {
         motor->MotorRtosInit();
@@ -29,6 +31,10 @@ void MotorManager::RTOSInitAllMotor() {
 
 void MotorManager::handleAll() {
     for (auto* motor: motors_) { motor->handle(); }
+}
+
+void MotorManager::stopAll() {
+    for (auto* motor: motors_) { motor->stop(); }
 }
 
 void MotorManager::taskEntry() {
@@ -40,7 +46,7 @@ void MotorManager::taskEntry() {
 
 void MotorManager::MotorManagerRTOSInit(const osThreadAttr_t* attr) {
     auto wrapper = [](void* arg) {
-        auto *self = static_cast<MotorManager*>(arg);
+        auto* self = static_cast<MotorManager*>(arg);
         self->taskEntry();
     };
     MotorManagerThread = osThreadNew(wrapper, this, attr);
