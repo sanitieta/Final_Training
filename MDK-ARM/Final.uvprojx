@@ -640,11 +640,6 @@
               <FilePath>..\User\Src\IMU.cpp</FilePath>
             </File>
             <File>
-              <FileName>Init.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\User\Src\Init.cpp</FilePath>
-            </File>
-            <File>
               <FileName>IST8310.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\User\Src\IST8310.cpp</FilePath>
@@ -683,6 +678,16 @@
               <FileName>RemoteController.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\User\Src\RemoteController.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>myInit.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\Src\myInit.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>usertasks.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\Src\usertasks.cpp</FilePath>
             </File>
           </Files>
         </Group>

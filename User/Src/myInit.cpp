@@ -2,7 +2,7 @@
 // Created by xuhao on 2025/11/5.
 //
 
-#include "../Inc/Init.h"
+#include "../Inc/myInit.h"
 
 #include "IMU.h"
 #include "usart.h"
@@ -25,10 +25,10 @@ osThreadAttr_t remote_control_attr = {
 osThreadAttr_t imu_task_attr = {
     .name = "IMU_Task",
     .stack_size = 1024 * 4,
-    .priority = osPriorityNormal,
+    .priority = osPriorityAboveNormal,
 };
 
-void MyInit(void) {
+void myInit(void) {
     // remote_controller.RCInit(&remote_control_attr);
-    imu.ImuInit(&imu_task_attr);
+    imu.ImuRtosInit(&imu_task_attr);
 }

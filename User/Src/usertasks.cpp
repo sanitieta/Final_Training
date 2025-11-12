@@ -3,8 +3,8 @@
 //
 
 #include "../Inc/usertasks.h"
-#include "Init.h"
+#include "myInit.h"
 
 void tasks_init() {
-    MyInit();
+    myInit();
 }

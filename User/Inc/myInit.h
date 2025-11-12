@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-void MyInit(void);
+void myInit(void);
 
 #ifdef __cplusplus
 }

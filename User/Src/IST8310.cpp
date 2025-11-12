@@ -6,13 +6,13 @@
 #include "stm32f4xx_hal.h"
 #include "i2c.h"
 #include "IST8310reg.h"
-
+#include <cmsis_os2.h>
 void IST8310_init() {
     // 重启磁力计
     HAL_GPIO_WritePin(IST8310_GPIOx, IST8310_GPIOp, GPIO_PIN_RESET);
-    HAL_Delay(50);
+    osDelay(50);
     HAL_GPIO_WritePin(IST8310_GPIOx, IST8310_GPIOp, GPIO_PIN_SET);
-    HAL_Delay(50);
+    osDelay(50);
 
     IST8310WriteSingleData(IST8310_CNTL2_ADDR, IST8310_STAT2_NONE_ALL);
     IST8310WriteSingleData(IST8310_AVGCNTL_ADDR, IST8310_AVGCNTL_FOURTH);

@@ -39,7 +39,7 @@ void IMU::update(float dt) {
     }
 
     // 卡尔曼滤波
-        kalman_calculate();
+    kalman_calculate();
 }
 
 // 输出接口依旧用角度，方便上层使用
@@ -47,12 +47,12 @@ void IMU::GetEulerAngle(float* roll, float* pitch, float* yaw) {
     if (osMutexAcquire(euler_mutex_, 10) == osOK) {
         *roll = euler_.roll_ * RAD2DEG;
         *pitch = euler_.pitch_ * RAD2DEG;
-        *yaw = euler_.yaw_* RAD2DEG;
+        *yaw = euler_.yaw_ * RAD2DEG;
         osMutexRelease(euler_mutex_);
     } else {
         *roll = euler_.roll_ * RAD2DEG;
         *pitch = euler_.pitch_ * RAD2DEG;
-        *yaw = euler_.yaw_* RAD2DEG;
+        *yaw = euler_.yaw_ * RAD2DEG;
     }
 }
 
@@ -145,8 +145,8 @@ void IMU::Compass::compass_calculate(const EulerAngle& euler) {
     compass_yaw_ = atan2f(-my_h, mx_h); // 输出为弧度
 }
 
-// IMU初始化 这个函数只会被执行一次
-void IMU::ImuInit(const osThreadAttr_t* thread_attr) {
+// IMU任务初始化 这个函数只会被执行一次
+void IMU::ImuRtosInit(const osThreadAttr_t* thread_attr) {
     bmi088_data_mutex_ = osMutexNew(nullptr); // 创建BMI088数据互斥锁
     ist8310_data_mutex_ = osMutexNew(nullptr); // 创建IST8310数据互斥锁
     euler_mutex_ = osMutexNew(nullptr); // 创建欧拉角互斥锁
@@ -155,28 +155,24 @@ void IMU::ImuInit(const osThreadAttr_t* thread_attr) {
         self->taskEntry();
     }; // 包装一下taskEntry() 以适应osThreadNew的参数要求
     imu_task_handle_ = osThreadNew(wapper, this, thread_attr);
+}
+
+void IMU::ImuHardwareInit() {
+    IST8310_init();
+    bmi088_init();
     // 空读几次丢掉前几次不稳定的数据
     for (size_t i = 0; i < 10; i++) {
         IST8310ReadMagData(nullptr, nullptr, nullptr);
         bmi088_gyro_read_data(nullptr, nullptr, nullptr, nullptr);
         bmi088_accel_read_data(nullptr, nullptr, nullptr, nullptr);
-        for (volatile int j = 0; j < 5000; j++) {}
+        osDelay(2);
     }
     // 初始姿态 假设初始时静止
-    if (osMutexAcquire(euler_mutex_,osWaitForever) == osOK) {
-        if (osMutexAcquire(bmi088_data_mutex_, osWaitForever) == osOK) {
-            accel_.acc_calculate();
-            euler_.pitch_ = accel_.acc_pitch_;
-            euler_.roll_ = accel_.acc_roll_;
-            osMutexRelease(bmi088_data_mutex_);
-        }
-        if (osMutexAcquire(ist8310_data_mutex_, osWaitForever) == osOK) {
-            compass_.compass_calculate(euler_);
-            euler_.yaw_ = compass_.compass_yaw_;
-            osMutexRelease(ist8310_data_mutex_);
-        }
-        osMutexRelease(euler_mutex_);
-    }
+    accel_.acc_calculate();
+    euler_.pitch_ = accel_.acc_pitch_;
+    euler_.roll_ = accel_.acc_roll_;
+    compass_.compass_calculate(euler_);
+    euler_.yaw_ = compass_.compass_yaw_;
     // 校准陀螺仪零偏 2000次约10秒
     size_t calibration_count = 0;
     constexpr size_t CALIBRATION_TOTAL = 2000; // 2000次约10秒
@@ -190,7 +186,7 @@ void IMU::ImuInit(const osThreadAttr_t* thread_attr) {
 void IMU::taskEntry() {
     uint32_t last_tick_ = HAL_GetTick();
     const uint32_t PERIOD_MS = 1; // 1ms周期
-
+    ImuHardwareInit();
     while (true) {
         uint32_t now = HAL_GetTick();
         float dt = (now - last_tick_) / 1000.0f; // 转换为秒
@@ -223,7 +219,7 @@ void IMU::complement_calculate(float comp_acc_alpha_, float comp_compass_alpha_)
 // 卡尔曼滤波
 void IMU::kalman_calculate() {
     EulerAngle euler_copy;
-    if (osMutexAcquire(euler_mutex_,10) == osOK) {
+    if (osMutexAcquire(euler_mutex_, 10) == osOK) {
         euler_copy = euler_;
         osMutexRelease(euler_mutex_);
     } else {
@@ -260,7 +256,7 @@ void IMU::kalman_calculate() {
     }
 
     // 3. 写回
-    if (osMutexAcquire(euler_mutex_,10) == osOK) {
+    if (osMutexAcquire(euler_mutex_, 10) == osOK) {
         euler_ = euler_copy;
         osMutexRelease(euler_mutex_);
     } else {

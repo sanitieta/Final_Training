@@ -142,22 +142,22 @@ void bmi088_accel_read_data(float* range, float* x, float* y, float* z) {
 void bmi088_init(void) {
     // ACC 重置
     bmi088_accel_write_single_reg(0x7E, 0xB6);
-    HAL_Delay(50); // 至少50ms
+    osDelay(50); // 至少50ms
 
     // GYRO 重置
     bmi088_gyro_write_single_reg(0x14, 0xB6);
-    HAL_Delay(30);
+    osDelay(50);
 
     bmi088_accel_read_reg(0x00, nullptr, 1);
     // 打开加速度计电源
     bmi088_accel_write_single_reg(0x7D, 0x04); // ACC_PWR_CTRL: enable accelerometer
-    HAL_Delay(5);
+    osDelay(5);
     bmi088_accel_write_single_reg(0x7C, 0x00);
-    HAL_Delay(5);
+    osDelay(5);
     // 检查是否进入正常模式
-    uint8_t id;
+    uint8_t id = 0;
     bmi088_accel_read_reg(0x02, &id, 1);
-    while (id != 0x00) {}
+    while (id == 0xFF) {}
     // 配置测量范围和带宽
     bmi088_gyro_write_single_reg(0x0F, 0x02); // ±500°/s
     bmi088_accel_write_single_reg(0x41, 0x00); // ±3g

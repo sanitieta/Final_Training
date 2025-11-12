@@ -5,10 +5,10 @@
 #ifndef FINAL_USERTASKS_H
 #define FINAL_USERTASKS_H
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
-
+void tasks_init();
 #ifdef __cplusplus
 }
 #endif

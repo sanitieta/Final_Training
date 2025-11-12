@@ -41,8 +41,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         User/Src/IMU.cpp
         User/Src/IST8310.cpp
         User/Src/RemoteController.cpp
-        User/Src/Init.cpp
-        User/Inc/Init.h
+        User/Src/myInit.cpp
+        User/Inc/myInit.h
         User/Src/CanTxManager.cpp
         User/Inc/CanTxManager.h
         User/Src/MotorBase.cpp

@@ -11,7 +11,8 @@ class IMU {
 public:
     void update(float dt);
     void GetEulerAngle(float* roll, float* pitch, float* yaw);
-    void ImuInit(const osThreadAttr_t* thread_attr);
+    void ImuRtosInit(const osThreadAttr_t* thread_attr);
+    void ImuHardwareInit();
     void taskEntry();
 
 private:
