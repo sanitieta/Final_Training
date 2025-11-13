@@ -57,6 +57,7 @@ CAN_FilterTypeDef hcan1_filter = {
 void myInit(void) {
     // remote_controller.RCInit(&remote_control_attr);
     // imu.ImuRtosInit(&imu_task_attr);
+    motor_yaw.set_spid(0.015, 0.0018, 0.0, 0.0);
     // CanTxManager 初始化
     auto& can_tx_manager = CanTxManager::instance();
     can_tx_manager.CanTxRtosInit(&can_tx_manager_task_attr);
