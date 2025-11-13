@@ -19,6 +19,7 @@
 RemoteController remote_controller(&huart3);
 IMU imu;
 M6020Motor motor_yaw(1, 1.0f, SPEED);
+M6020Motor motor_pitch(4, 1.0f, POSITION_SPEED);
 // M6020Motor motor_pitch(2, 1.0f, POSITION_SPEED);
 
 osThreadAttr_t remote_control_attr = {
@@ -55,7 +56,7 @@ CAN_FilterTypeDef hcan1_filter = {
 
 void myInit(void) {
     // remote_controller.RCInit(&remote_control_attr);
-    imu.ImuRtosInit(&imu_task_attr);
+    // imu.ImuRtosInit(&imu_task_attr);
     // CanTxManager 初始化
     auto& can_tx_manager = CanTxManager::instance();
     can_tx_manager.CanTxRtosInit(&can_tx_manager_task_attr);
@@ -63,6 +64,7 @@ void myInit(void) {
     auto& motor_manager = MotorManager::instance();
     motor_manager.MotorManagerRTOSInit(&motor_manager_attr);
     motor_manager.addMotor(&motor_yaw);
+    motor_manager.addMotor(&motor_pitch);
     motor_manager.RTOSInitAllMotor();
     // CAN 初始化
     HAL_CAN_ConfigFilter(&hcan1, &hcan1_filter);

@@ -40,6 +40,20 @@ void M3508Motor::start() {
     this->stop_flag_ = false;
 }
 
+void M3508Motor::set_spid(float p, float i, float d, float d_filter) {
+    spid_.kp_ = p;
+    spid_.ki_ = i;
+    spid_.kd_ = d;
+    spid_.kd_ = d_filter;
+}
+
+void M3508Motor::set_ppid(float p, float i, float d, float d_filter) {
+    ppid_.kp_ = p;
+    ppid_.ki_ = i;
+    ppid_.kd_ = d;
+    ppid_.kd_ = d_filter;
+}
+
 void M3508Motor::ProcessRxQueue() {
     uint8_t msg[8]{};
     while (osMessageQueueGet(rx_queue_, msg, nullptr, 0) == osOK) {

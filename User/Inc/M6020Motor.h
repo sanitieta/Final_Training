@@ -24,7 +24,8 @@ public:
     void setSpeed(float target_speed, float ff_torque) override;
     void setPosition(float target_pos, float ff_speed, float ff_torque) override;
     void MotorRtosInit() override;
-
+    void set_spid(float p, float i, float d,float d_filter);
+    void set_ppid(float p, float i, float d,float d_filter);
 private:
     void ProcessRxQueue();
     void ParseRxData(const uint8_t rxdata[8]);

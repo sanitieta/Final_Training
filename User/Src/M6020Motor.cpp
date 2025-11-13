@@ -12,8 +12,8 @@ M6020Motor::M6020Motor(uint8_t escid, float ratio, ControlMethod control_method)
     ratio_(ratio),
     control_method_(control_method) {
     // 配置PID参数
-    spid_ = PID(0.008f, 0.0f, 0.0056f, MAX_SPEED, MAX_CURRENT, 0.05f); // 内环 速度环PID
-    ppid_ = PID(200.0f, 0.015f, 220.0f, 100.0f, MAX_SPEED, 0.06f); // 外环 位置环PID
+    spid_ = PID(0.0f, 0.0f, 0.0f, MAX_SPEED, MAX_CURRENT, 0.0f); // 内环 速度环PID
+    ppid_ = PID(0.0f, 0.0f, 0.0f, 100.0f, MAX_SPEED, 0.0f); // 外环 位置环PID
 }
 
 void M6020Motor::CanRxCallback(const uint8_t rxdata[8]) {
@@ -38,6 +38,20 @@ void M6020Motor::stop() {
 
 void M6020Motor::start() {
     this->stop_flag_ = false;
+}
+
+void M6020Motor::set_spid(float p, float i, float d, float d_filter) {
+    spid_.kp_ = p;
+    spid_.ki_ = i;
+    spid_.kd_ = d;
+    spid_.kd_ = d_filter;
+}
+
+void M6020Motor::set_ppid(float p, float i, float d, float d_filter) {
+    ppid_.kp_ = p;
+    ppid_.ki_ = i;
+    ppid_.kd_ = d;
+    ppid_.kd_ = d_filter;
 }
 
 void M6020Motor::ProcessRxQueue() {
@@ -128,7 +142,7 @@ void M6020Motor::EnqueueCurrentCommand(float current_cmd) {
     }
     auto& can_manager = CanTxManager::instance();
     auto intensity = static_cast<int16_t>(current_cmd * 16384.0f / MAX_CURRENT);
-    intensity = -intensity; // 6020电机电流方向与命令相反 给正电流指令逆时针旋转
+    // intensity = -intensity; // 6020电机电流方向与命令相反 给正电流指令逆时针旋转
     can_manager.SetMotorCurrent(escid_, intensity, MotorType::M6020);
 }
 
