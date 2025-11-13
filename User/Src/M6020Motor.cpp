@@ -59,9 +59,10 @@ void M6020Motor::ParseRxData(const uint8_t rxdata[8]) {
     }
     float delta_ecd_angle = ecd_angle_ - last_ecd_angle_;
     // 解决临界跳变
-    if (delta_ecd_angle > 180.0f) {
+    while (delta_ecd_angle > 180.0f) {
         delta_ecd_angle -= 360.0f;
-    } else if (delta_ecd_angle < -180.0f) {
+    }
+    while (delta_ecd_angle < -180.0f) {
         delta_ecd_angle += 360.0f;
     }
     delta_angle_ = delta_ecd_angle / ratio_;
@@ -127,6 +128,7 @@ void M6020Motor::EnqueueCurrentCommand(float current_cmd) {
     }
     auto& can_manager = CanTxManager::instance();
     auto intensity = static_cast<int16_t>(current_cmd * 16384.0f / MAX_CURRENT);
+    intensity = -intensity; // 6020电机电流方向与命令相反 给正电流指令逆时针旋转
     can_manager.SetMotorCurrent(escid_, intensity, MotorType::M6020);
 }
 

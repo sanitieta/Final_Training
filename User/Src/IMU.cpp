@@ -5,7 +5,7 @@
 #include "IMU.h"
 #include "IST8310.h"
 #include <cmath>
-
+#include <cmsis_os2.h>
 #ifndef PI
 #define PI 3.14159265358979323846
 #endif
@@ -130,18 +130,12 @@ void IMU::Compass::compass_calculate(const EulerAngle& euler) {
 
     float roll = euler.roll_;
     float pitch = euler.pitch_;
-    float R[2][3] = { 0 };
-    R[0][0] = cosf(pitch);
-    R[0][1] = sinf(roll) * sinf(pitch);
-    R[0][2] = cosf(roll) * sinf(pitch);
-    R[1][0] = 0.0f;
-    R[1][1] = cosf(roll);
-    R[1][2] = -sinf(roll);
 
-    // 坐标转换
-    float mx_h = R[0][0] * mx_ + R[0][1] * my_ + R[0][2] * mz_;
-    float my_h = R[1][0] * mx_ + R[1][1] * my_ + R[1][2] * mz_;
+    // 机体系磁场 -> 水平面磁场
+    float mx_h = mx_ * cosf(pitch) + mz_ * sinf(pitch);
+    float my_h = mx_ * sinf(roll) * sinf(pitch) + my_ * cosf(roll) - mz_ * sinf(roll) * cosf(pitch);
 
+    // 注意：这里负号方向要根据实际旋转方向确定
     compass_yaw_ = atan2f(-my_h, mx_h); // 输出为弧度
 }
 
@@ -254,7 +248,9 @@ void IMU::kalman_calculate() {
     while (euler_copy.yaw_ < -PI) {
         euler_copy.yaw_ += 2.0f * PI;
     }
-
+    euler_copy.roll_degree_ = euler_copy.roll_ * RAD2DEG;
+    euler_copy.pitch_degree_ = euler_copy.pitch_ * RAD2DEG;
+    euler_copy.yaw_degree_ = euler_copy.yaw_ * RAD2DEG;
     // 3. 写回
     if (osMutexAcquire(euler_mutex_, 10) == osOK) {
         euler_ = euler_copy;
