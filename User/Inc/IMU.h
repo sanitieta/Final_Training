@@ -40,7 +40,7 @@ private:
 
     typedef struct Compass {
         float mx_ = 0, my_ = 0, mz_ = 0; // 单位 uT
-        float compass_yaw_ = 0;
+        float compass_yaw_ = 0, compass_yaw_degree_ = 0;
         bool if_updated_ = false; // 磁力计更新标志位 200Hz
         size_t compass_duty_ = 0;
         void compass_calculate(const EulerAngle& euler);

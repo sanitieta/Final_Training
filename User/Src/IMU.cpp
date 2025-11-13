@@ -137,6 +137,7 @@ void IMU::Compass::compass_calculate(const EulerAngle& euler) {
 
     // 注意：这里负号方向要根据实际旋转方向确定
     compass_yaw_ = atan2f(-my_h, mx_h); // 输出为弧度
+    compass_yaw_degree_ = compass_yaw_ * RAD2DEG;
 }
 
 // IMU任务初始化 这个函数只会被执行一次
@@ -234,13 +235,13 @@ void IMU::kalman_calculate() {
     euler_copy.pitch_ += K_pitch * (accel_.acc_pitch_ - gyro_.gyro_pitch_);
     P_pitch *= (1 - K_pitch);
     // yaw (磁力计更新时才使用卡尔曼滤波更新)
-    if (compass_.if_updated_ == true) {
-        float K_yaw = P_yaw / (P_yaw + R_yaw);
-        euler_copy.yaw_ += K_yaw * (compass_.compass_yaw_ - gyro_.gyro_yaw_);
-        P_yaw *= (1 - K_yaw);
-    } else {
+    // if (compass_.if_updated_ == true) {
+    //     float K_yaw = P_yaw / (P_yaw + R_yaw);
+    //     euler_copy.yaw_ += K_yaw * (compass_.compass_yaw_ - gyro_.gyro_yaw_);
+    //     P_yaw *= (1 - K_yaw);
+    // } else {
         euler_copy.yaw_ = gyro_.gyro_yaw_;
-    }
+    // }
     // yaw 限制在[-π, π]之间
     while (euler_copy.yaw_ >= PI) {
         euler_copy.yaw_ -= 2.0f * PI;
