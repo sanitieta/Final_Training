@@ -684,6 +684,11 @@
               <FileType>8</FileType>
               <FilePath>..\User\Src\usertasks.cpp</FilePath>
             </File>
+            <File>
+              <FileName>main_manager.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\Src\main_manager.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

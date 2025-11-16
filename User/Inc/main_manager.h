@@ -27,7 +27,12 @@ public:
 
 private:
     void taskEntry();
+
     osThreadId_t MainManagerThread = nullptr;
+    RCData rc_data_;
+
+    float motor_yaw_target = 0.0f, motor_pitch_target = -30.0f; // 根据云台实际要求来
+    void compute_target_pos();
 };
 
 

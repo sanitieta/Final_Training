@@ -4,9 +4,9 @@
 #include "stm32f4xx_hal.h"
 #include "usart.h"
 #include "can.h"
-#include "RemoteController.h"
 #include "MotorManager.h"
-extern RemoteController remote_controller;
+#include "main_manager.h"
+extern main_manager project_manager;
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
     if (hcan == &hcan1) {
@@ -25,6 +25,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
 
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef* huart, uint16_t Size) {
     if (huart == &huart3) {
-        remote_controller.ITcallback(Size);
+        project_manager.remote_controller.ITcallback(Size);
     }
 }
