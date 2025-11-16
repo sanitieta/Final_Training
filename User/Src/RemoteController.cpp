@@ -33,6 +33,8 @@ void RemoteController::parseData() {
     osMutexAcquire(data_mutex_,osWaitForever); // 获取数据互斥锁
     data_ = data_copy;
     osMutexRelease(data_mutex_);
+
+    osSemaphoreRelease(ifReceived_semaphore_); // 释放数据可用信号量
 }
 
 void RemoteController::taskEntry() {
@@ -48,8 +50,9 @@ void RemoteController::taskEntry() {
     }
 }
 
-void RemoteController::RCInit(const osThreadAttr_t* thread_attr) {
+void RemoteController::RC_RTOSInit(const osThreadAttr_t* thread_attr) {
     data_ready_semaphore_ = osSemaphoreNew(1, 0, nullptr); // 创建信号量
+    ifReceived_semaphore_ = osSemaphoreNew(1, 0, nullptr);
     data_mutex_ = osMutexNew(nullptr); // 创建互斥锁
     // 包装一下taskEntry() 以适应osThreadNew的参数要求
     auto wrapper = [](void* arg) {
@@ -57,7 +60,6 @@ void RemoteController::RCInit(const osThreadAttr_t* thread_attr) {
         self->taskEntry();
     };
     task_handle_ = osThreadNew(wrapper, this, thread_attr);
-
 }
 
 // 中断回调函数

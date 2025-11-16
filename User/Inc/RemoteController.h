@@ -38,7 +38,8 @@ private:
     void parseData(); // 解包
     void taskEntry(); // 任务入口函数
 public:
-    void RCInit(const osThreadAttr_t* thread_attr);
+    osSemaphoreId_t ifReceived_semaphore_ = nullptr;
+    void RC_RTOSInit(const osThreadAttr_t* thread_attr);
     void ITcallback(uint16_t Size);
     bool connectState();
     RCData getData();

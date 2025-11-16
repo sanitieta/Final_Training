@@ -28,7 +28,7 @@ void main_manager::sysInit(const osThreadAttr_t* imu_task_attr,
     motor_yaw.set_ppid(25, 0.08, 1400, 0.055);
 
     // RemoteController 初始化
-    remote_controller.RCInit(remote_control_attr);
+    remote_controller.RC_RTOSInit(remote_control_attr);
     // IMU 初始化
     imu.ImuRtosInit(imu_task_attr);
     // CanTxManager 初始化
@@ -45,4 +45,11 @@ void main_manager::sysInit(const osThreadAttr_t* imu_task_attr,
     HAL_CAN_ConfigFilter(&hcan1, hcan1_filter);
     HAL_CAN_Start(&hcan1);
     HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+}
+
+void main_manager::taskEntry() {
+    while (true) {
+        if (osSemaphoreAcquire(ifReceived_semaphore_))
+        osDelay(10);
+    }
 }
