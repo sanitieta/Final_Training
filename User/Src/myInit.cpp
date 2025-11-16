@@ -28,7 +28,7 @@ osThreadAttr_t imu_task_attr = {
 osThreadAttr_t motor_manager_attr = {
     .name = "MotorManager_Task",
     .stack_size = 1024 * 4,
-    .priority = osPriorityAboveNormal,
+    .priority = osPriorityHigh,
 };
 osThreadAttr_t can_tx_manager_task_attr = {
     .name = "CanTxManager_Task",
@@ -38,7 +38,7 @@ osThreadAttr_t can_tx_manager_task_attr = {
 osThreadAttr_t main_manager_attr = {
     .name = "MainManager_Task",
     .stack_size = 1024,
-    .priority = osPriorityLow,
+    .priority = osPriorityBelowNormal,
 };
 
 CAN_FilterTypeDef hcan1_filter = {

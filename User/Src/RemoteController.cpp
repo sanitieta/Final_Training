@@ -83,7 +83,7 @@ bool RemoteController::connectState() {
     return isConnected_;
 }
 
-RemoteController::RCData RemoteController::getData() {
+RCData RemoteController::getData() {
     RCData copy;
     osMutexAcquire(data_mutex_,osWaitForever); // 获取数据互斥锁
     copy = data_;

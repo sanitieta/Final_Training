@@ -44,14 +44,14 @@ void M6020Motor::set_spid(float p, float i, float d, float d_filter) {
     spid_.kp_ = p;
     spid_.ki_ = i;
     spid_.kd_ = d;
-    spid_.kd_ = d_filter;
+    spid_.d_filter_k_ = d_filter;
 }
 
 void M6020Motor::set_ppid(float p, float i, float d, float d_filter) {
     ppid_.kp_ = p;
     ppid_.ki_ = i;
     ppid_.kd_ = d;
-    ppid_.kd_ = d_filter;
+    ppid_.d_filter_k_ = d_filter;
 }
 
 void M6020Motor::ProcessRxQueue() {

@@ -9,6 +9,14 @@
 
 enum Switch { UP = 1, DOWN, MID };
 
+struct RCData {
+    float ch0 = 0.0f, ch1 = 0.0f, ch2 = 0.0f, ch3 = 0.0f;
+    Switch s1 = DOWN, s2 = DOWN;
+    int16_t mouse_x = 0, mouse_y = 0, mouse_z = 0;
+    uint8_t mouse_press_l = 0, mouse_press_r = 0;
+    uint16_t key = 0;
+};
+
 class RemoteController {
 private:
     static constexpr size_t RX_DMA_BUFFER_SIZE = 18;
@@ -25,13 +33,7 @@ private:
     osMutexId_t data_mutex_ = nullptr;
     osThreadId_t task_handle_ = nullptr;
 
-    struct RCData {
-        float ch0 = 0.0f, ch1 = 0.0f, ch2 = 0.0f, ch3 = 0.0f;
-        Switch s1 = UP, s2 = UP;
-        int16_t mouse_x = 0, mouse_y = 0, mouse_z = 0;
-        uint8_t mouse_press_l = 0, mouse_press_r = 0;
-        uint16_t key = 0;
-    } data_;
+    RCData data_;
 
     static float normalize_channel(int16_t value) { return (static_cast<float>(value) - 1024.0f) / 660.0f; }
 
@@ -44,7 +46,6 @@ public:
     bool connectState();
     RCData getData();
     RemoteController(UART_HandleTypeDef* huart) ;
-    RemoteController() { RemoteController (huart3); }
 };
 
 
