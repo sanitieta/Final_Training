@@ -10,17 +10,10 @@
 #include "MotorBase.h"
 #include "M6020Motor.h"
 #include "can.h"
+#include "../Inc/main_manager.h"
+
 #include <cmsis_os2.h>
 #include "stm32f4xx_hal_can.h"
-// volatile uint8_t tmp0 = 0;
-// volatile uint8_t tmp1 = 0;
-// volatile uint8_t tmp2 = 0;
-
-RemoteController remote_controller(&huart3);
-IMU imu;
-M6020Motor motor_yaw(1, 1.0f, SPEED);
-M6020Motor motor_pitch(4, 1.0f, POSITION_SPEED);
-// M6020Motor motor_pitch(2, 1.0f, POSITION_SPEED);
 
 osThreadAttr_t remote_control_attr = {
     .name = "RemoteController_Task",
@@ -42,6 +35,12 @@ osThreadAttr_t can_tx_manager_task_attr = {
     .stack_size = 1024,
     .priority = osPriorityHigh,
 };
+osThreadAttr_t main_manager_attr = {
+    .name = "MainManager_Task",
+    .stack_size = 1024,
+    .priority = osPriorityLow,
+};
+
 CAN_FilterTypeDef hcan1_filter = {
     .FilterIdHigh = 0x0000,
     .FilterIdLow = 0x0000,
@@ -53,22 +52,12 @@ CAN_FilterTypeDef hcan1_filter = {
     .FilterScale = CAN_FILTERSCALE_32BIT,
     .FilterActivation = ENABLE,
 };
+main_manager project_manager(&main_manager_attr);
 
 void myInit(void) {
-    // remote_controller.RCInit(&remote_control_attr);
-    // imu.ImuRtosInit(&imu_task_attr);
-    motor_yaw.set_spid(0.015, 0.0018, 0.0, 0.0);
-    // CanTxManager 初始化
-    auto& can_tx_manager = CanTxManager::instance();
-    can_tx_manager.CanTxRtosInit(&can_tx_manager_task_attr);
-    // MotorManager 初始化
-    auto& motor_manager = MotorManager::instance();
-    motor_manager.MotorManagerRTOSInit(&motor_manager_attr);
-    motor_manager.addMotor(&motor_yaw);
-    motor_manager.addMotor(&motor_pitch);
-    motor_manager.RTOSInitAllMotor();
-    // CAN 初始化
-    HAL_CAN_ConfigFilter(&hcan1, &hcan1_filter);
-    HAL_CAN_Start(&hcan1);
-    HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+    project_manager.sysInit(&imu_task_attr,
+                            &motor_manager_attr,
+                            &can_tx_manager_task_attr,
+                            &remote_control_attr,
+                            &hcan1_filter);
 }

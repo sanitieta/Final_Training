@@ -42,7 +42,8 @@ public:
     void ITcallback(uint16_t Size);
     bool connectState();
     RCData getData();
-    RemoteController(UART_HandleTypeDef* huart);
+    RemoteController(UART_HandleTypeDef* huart) ;
+    RemoteController() { RemoteController (huart3); }
 };
 
 
