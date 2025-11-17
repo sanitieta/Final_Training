@@ -6,7 +6,7 @@
 #include "can.h"
 #include "MotorManager.h"
 #include "main_manager.h"
-extern main_manager project_manager;
+extern MainManager project_manager;
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
     if (hcan == &hcan1) {
@@ -17,7 +17,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
         if (message_header.StdId >= 0x205 && message_header.StdId <= 0x20B) {
             // 6020电机消息
             auto motor_id = static_cast<uint8_t>(message_header.StdId - 0x204);
-            auto* motor = motor_manager.getMotorById(motor_id);
+            auto* motor = motor_manager.getMotorById(motor_id); // 查找对应电机
             if (motor != nullptr) { motor->CanRxCallback(rx_data); }
         }
     }

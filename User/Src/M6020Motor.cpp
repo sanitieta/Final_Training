@@ -173,7 +173,7 @@ void M6020Motor::setPosition(float target_pos, float ff_speed, float ff_torque) 
     }
 }
 
-void M6020Motor::MotorRtosInit() {
+void M6020Motor::RTOS_MotorInit() {
     rx_queue_ = osMessageQueueNew(24, 8, nullptr);
     data_mutex_ = osMutexNew(nullptr);
 }

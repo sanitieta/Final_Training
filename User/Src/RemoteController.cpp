@@ -3,7 +3,6 @@
 //
 #include "stm32f4xx_hal.h"
 #include "RemoteController.h"
-#include "usart.h"
 #include <string.h>
 
 RemoteController::RemoteController(UART_HandleTypeDef* huart):
@@ -73,13 +72,8 @@ void RemoteController::ITcallback(uint16_t Size) {
     HAL_UARTEx_ReceiveToIdle_DMA(huart_, rx_dma_buffer_, RX_DMA_BUFFER_SIZE);
 }
 
-
 bool RemoteController::connectState() {
-    if (HAL_GetTick() - last_rx_tick_ < TIMEOUT) {
-        isConnected_ = true;
-    } else {
-        isConnected_ = false;
-    }
+    (HAL_GetTick() - last_rx_tick_ < TIMEOUT) ? isConnected_ = true : isConnected_ = false;
     return isConnected_;
 }
 

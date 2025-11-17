@@ -7,24 +7,24 @@
 
 #include <cmath>
 
-main_manager::main_manager(const osThreadAttr_t* main_manager_attr
+MainManager::MainManager(const osThreadAttr_t* main_manager_attr
 
 ):
     remote_controller(&huart3),
     motor_yaw(1, 1.0f, POSITION_SPEED),
     motor_pitch(4, 1.0f, POSITION_SPEED) {
     auto wrapper = [](void* arg) {
-        auto* self = static_cast<main_manager*>(arg);
+        auto* self = static_cast<MainManager*>(arg);
         self->taskEntry();
     };
     osThreadNew(wrapper, this, main_manager_attr);
 }
 
-void main_manager::sysInit(const osThreadAttr_t* imu_task_attr,
-                           const osThreadAttr_t* motor_manager_attr,
-                           const osThreadAttr_t* can_tx_manager_task_attr,
-                           const osThreadAttr_t* remote_control_attr,
-                           const CAN_FilterTypeDef* hcan1_filter) {
+void MainManager::sysInit(const osThreadAttr_t* imu_task_attr,
+                          const osThreadAttr_t* motor_manager_attr,
+                          const osThreadAttr_t* can_tx_manager_task_attr,
+                          const osThreadAttr_t* remote_control_attr,
+                          const CAN_FilterTypeDef* hcan1_filter) {
     // 电机PID参数初始化
     motor_yaw.set_spid(0.007f, 0.0f, 0.0f, 0.0f);
     motor_yaw.set_ppid(1.9f, 0.2f, 25.0f, 0.04f);
@@ -51,7 +51,7 @@ void main_manager::sysInit(const osThreadAttr_t* imu_task_attr,
     HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
 }
 
-void main_manager::taskEntry() {
+void MainManager::taskEntry() {
     auto& motor_manager = MotorManager::instance();
     while (true) {
         /* 获取遥控器数据  */
@@ -66,7 +66,7 @@ void main_manager::taskEntry() {
     }
 }
 
-void main_manager::compute_target_pos() {
+void MainManager::compute_target_pos() {
     float ch2 = rc_data_.ch2; // 已经是 -1.0 ~ +1.0 的归一化值
     float ch3 = rc_data_.ch3; // 已经是 -1.0 ~ +1.0 的归一化值
     const float deadzone = 0.05f; // 5% 死区，可调
@@ -92,6 +92,6 @@ void main_manager::compute_target_pos() {
     if (ch2 < -1.0f) { ch2 = -1.0f; }
 
     // 映射到目标角度
-    motor_yaw_target = - ch2 * max_angle_ch2; // 电机定义正方向与遥控器相反
-    motor_pitch_target = - ch3 * max_angle_ch3 - 30.0f; // 初始位置下调30度 并反向
+    motor_yaw_target = -ch2 * max_angle_ch2; // 电机定义正方向与遥控器相反
+    motor_pitch_target = -ch3 * max_angle_ch3 - 30.0f; // 初始位置下调30度 并反向
 }

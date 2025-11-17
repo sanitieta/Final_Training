@@ -2,8 +2,8 @@
 // Created by xuhao on 2025/11/11.
 //
 
-#ifndef FINAL_M3508MOTOR_H
-#define FINAL_M3508MOTOR_H
+#ifndef FINAL_M6020MOTOR_H
+#define FINAL_M6020MOTOR_H
 
 #include "CanTxManager.h"
 #include "MotorBase.h"
@@ -16,14 +16,14 @@ public:
 
     void CanRxCallback(const uint8_t rxdata[8]) override;
     void handle() override;
-    void stop() override;
-    void start() override;
     uint8_t getId() const override { return escid_; }
     MotorType getType() const override { return MotorType::M3508; }
+    void stop() override;
+    void start() override;
     void setTorque(float torque) override;
     void setSpeed(float target_speed, float ff_torque) override;
     void setPosition(float target_pos, float ff_speed, float ff_torque) override;
-    void MotorRtosInit() override;
+    void RTOS_MotorInit() override;
     void set_spid(float p, float i, float d,float d_filter);
     void set_ppid(float p, float i, float d,float d_filter);
 private:
@@ -35,9 +35,10 @@ private:
     float TorqueToCurrent(float torque) const;
 
 private:
+    // 电机属性
     const uint8_t escid_; // 电调号（1-8）
     const float ratio_; // 减速比
-    const float torque_constant_ = 0.3f; // 力矩常数 Nm/A 已经包括减速比
+    const float torque_constant_ = 0.741f; // 力矩常数 Nm/A 已经包括减速比 M6020
 
     // 电机状态
     float angle_ = 0.0f; // 累计角度（考虑减速比）
@@ -51,8 +52,8 @@ private:
     bool can_init_flag_ = true; // 初始化标志
     bool stop_flag_ = true; // 停止标志
     // 电机限制参数
-    const float MAX_CURRENT = 10.0f; // 最大电流限制 C620
-    const float MAX_SPEED = 1500.0f; // 最大转速限制
+    const float MAX_CURRENT = 3.0f; // 最大电流限制 M6020
+    const float MAX_SPEED = 400.0f; // 最大转速限制 M6020
     const float MAX_TEMP = 85.0f; // 最大温度限制
     const float WARN_TEMP = 70.0f; // 警告温度限制
     // PID
@@ -62,11 +63,9 @@ private:
     float output_torque_ = 0.0f, feedforward_torque_ = 0.0f; // 输出力矩 注意：Torque为电机原始力矩，不带减速器
     ControlMethod control_method_;
     ControlMethod prev_method_ = TORQUE;
-
     // FreeRTOS
     osMessageQueueId_t rx_queue_ = nullptr;
     osMutexId_t data_mutex_ = nullptr;
 };
 
-
-#endif //FINAL_M3508MOTOR_H
+#endif //FINAL_M6020MOTOR_H

@@ -12,8 +12,8 @@ M3508Motor::M3508Motor(uint8_t escid, float ratio, ControlMethod control_method)
     ratio_(ratio),
     control_method_(control_method) {
     // 配置PID参数
-    spid_ = PID(0.008f, 0.0f, 0.0056f, MAX_SPEED, MAX_CURRENT, 0.05f); // 内环 速度环PID
-    ppid_ = PID(200.0f, 0.015f, 220.0f, 100.0f, MAX_SPEED, 0.06f); // 外环 位置环PID
+    spid_ = PID(0.0f, 0.0f, 0.0f, MAX_SPEED, MAX_CURRENT, 0.0f); // 内环 速度环PID
+    ppid_ = PID(0.0f, 0.0f, 0.0f, 100.0f, MAX_SPEED, 0.0f); // 外环 位置环PID
 }
 
 void M3508Motor::CanRxCallback(const uint8_t rxdata[8]) {
@@ -44,18 +44,18 @@ void M3508Motor::set_spid(float p, float i, float d, float d_filter) {
     spid_.kp_ = p;
     spid_.ki_ = i;
     spid_.kd_ = d;
-    spid_.kd_ = d_filter;
+    spid_.d_filter_k_ = d_filter;
 }
 
 void M3508Motor::set_ppid(float p, float i, float d, float d_filter) {
     ppid_.kp_ = p;
     ppid_.ki_ = i;
     ppid_.kd_ = d;
-    ppid_.kd_ = d_filter;
+    ppid_.d_filter_k_ = d_filter;
 }
 
 void M3508Motor::ProcessRxQueue() {
-    uint8_t msg[8]{};
+    uint8_t msg[8]{ 0 };
     while (osMessageQueueGet(rx_queue_, msg, nullptr, 0) == osOK) {
         ParseRxData(msg);
     }
@@ -73,9 +73,10 @@ void M3508Motor::ParseRxData(const uint8_t rxdata[8]) {
     }
     float delta_ecd_angle = ecd_angle_ - last_ecd_angle_;
     // 解决临界跳变
-    if (delta_ecd_angle > 180.0f) {
+    while (delta_ecd_angle > 180.0f) {
         delta_ecd_angle -= 360.0f;
-    } else if (delta_ecd_angle < -180.0f) {
+    }
+    while (delta_ecd_angle < -180.0f) {
         delta_ecd_angle += 360.0f;
     }
     delta_angle_ = delta_ecd_angle / ratio_;
@@ -141,6 +142,7 @@ void M3508Motor::EnqueueCurrentCommand(float current_cmd) {
     }
     auto& can_manager = CanTxManager::instance();
     auto intensity = static_cast<int16_t>(current_cmd * 16384.0f / MAX_CURRENT);
+    // intensity = -intensity; // 6020电机电流方向与命令相反 给正电流指令逆时针旋转
     can_manager.SetMotorCurrent(escid_, intensity, MotorType::M3508);
 }
 
@@ -171,7 +173,7 @@ void M3508Motor::setPosition(float target_pos, float ff_speed, float ff_torque) 
     }
 }
 
-void M3508Motor::MotorRtosInit() {
+void M3508Motor::RTOS_MotorInit() {
     rx_queue_ = osMessageQueueNew(24, 8, nullptr);
     data_mutex_ = osMutexNew(nullptr);
 }

@@ -12,7 +12,7 @@ public:
     static MotorManager& instance();
     void addMotor(MotorBase* motor);
     MotorBase* getMotorById(uint8_t id);
-    void RTOSInitAllMotor();
+    void RTOS_InitAllMotor();
     void handleAll(); // 在任务中周期性调用所有motor的handle
     void stopAll(); // 停止所有电机
     void startAll(); // 启动所有电机
@@ -24,6 +24,5 @@ private:
     osThreadId_t MotorManagerThread = nullptr;
     void taskEntry(); // 任务入口函数
 };
-
 
 #endif //FINAL_MOTORMANAGER_H

@@ -23,7 +23,7 @@ public:
     void setTorque(float torque) override;
     void setSpeed(float target_speed, float ff_torque) override;
     void setPosition(float target_pos, float ff_speed, float ff_torque) override;
-    void MotorRtosInit() override;
+    void RTOS_MotorInit() override;
     void set_spid(float p, float i, float d,float d_filter);
     void set_ppid(float p, float i, float d,float d_filter);
 private:
@@ -63,7 +63,6 @@ private:
     float output_torque_ = 0.0f, feedforward_torque_ = 0.0f; // 输出力矩 注意：Torque为电机原始力矩，不带减速器
     ControlMethod control_method_;
     ControlMethod prev_method_ = TORQUE;
-
     // FreeRTOS
     osMessageQueueId_t rx_queue_ = nullptr;
     osMutexId_t data_mutex_ = nullptr;

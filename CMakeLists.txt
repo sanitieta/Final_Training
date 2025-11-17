@@ -34,9 +34,7 @@ enable_language(C ASM)
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME}
         User/Src/callback.cpp
-        User/Inc/motor.h
         User/Src/pid.cpp
-        User/Src/motor.cpp
         User/Src/bmi088.cpp
         User/Src/IMU.cpp
         User/Src/IST8310.cpp
@@ -52,10 +50,10 @@ add_executable(${CMAKE_PROJECT_NAME}
         User/Inc/M6020Motor.h
         User/Src/MotorManager.cpp
         User/Inc/MotorManager.h
-        User/Src/usertasks.cpp
-        User/Inc/usertasks.h
         User/Src/main_manager.cpp
         User/Inc/main_manager.h
+        User/Src/myInit_c_api.c
+        User/Inc/myInit_c_api.h
 )
 
 # Add STM32CubeMX generated sources

@@ -2,16 +2,9 @@
 // Created by xuhao on 2025/11/5.
 //
 
-#include "../Inc/myInit.h"
+#include "myInit.h"
 #include "IMU.h"
-#include "usart.h"
-#include "RemoteController.h"
-#include "MotorManager.h"
-#include "MotorBase.h"
-#include "M6020Motor.h"
-#include "can.h"
-#include "../Inc/main_manager.h"
-
+#include "main_manager.h"
 #include <cmsis_os2.h>
 #include "stm32f4xx_hal_can.h"
 
@@ -52,7 +45,7 @@ CAN_FilterTypeDef hcan1_filter = {
     .FilterScale = CAN_FILTERSCALE_32BIT,
     .FilterActivation = ENABLE,
 };
-main_manager project_manager(&main_manager_attr);
+MainManager project_manager(&main_manager_attr);
 
 void myInit(void) {
     project_manager.sysInit(&imu_task_attr,

@@ -7,14 +7,12 @@
 #include <cmsis_os2.h>
 #include <stm32f4xx_hal.h>
 #include "IMU.h"
-#include "MotorManager.h"
 #include "RemoteController.h"
 #include "M6020Motor.h"
-#include "usart.h"
 
-class main_manager {
+class MainManager {
 public:
-    main_manager(const osThreadAttr_t* main_manager_attr);
+    explicit MainManager(const osThreadAttr_t* main_manager_attr);
     RemoteController remote_controller;
     IMU imu;
     M6020Motor motor_yaw;
@@ -34,6 +32,5 @@ private:
     float motor_yaw_target = 0.0f, motor_pitch_target = -30.0f; // 根据云台实际要求来
     void compute_target_pos();
 };
-
 
 #endif //FINAL_MAIN_MANAGER_H

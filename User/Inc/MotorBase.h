@@ -23,7 +23,7 @@ public:
     virtual void setTorque(float torque) = 0;
     virtual void setSpeed(float target_speed, float ff_intensity) = 0;
     virtual void setPosition(float target_pos, float ff_speed, float ff_intensity) = 0;
-    virtual void MotorRtosInit() = 0;
+    virtual void RTOS_MotorInit() = 0;
 };
 
 

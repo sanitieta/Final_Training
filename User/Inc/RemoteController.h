@@ -48,5 +48,4 @@ public:
     RemoteController(UART_HandleTypeDef* huart) ;
 };
 
-
 #endif //REMOTE_CONTROL_REMOTECONTROLLER_H

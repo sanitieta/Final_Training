@@ -5,10 +5,7 @@
 #include "CanTxManager.h"
 #include "can.h"
 #include "cmsis_os.h"
-#include <cmath>
-// extern volatile uint8_t tmp0;
-// extern volatile uint8_t tmp1;
-// extern volatile uint8_t tmp2;
+
 CanTxManager& CanTxManager::instance() {
     static CanTxManager instance;
     return instance;
@@ -53,21 +50,17 @@ void CanTxManager::sendCanMessages() {
     uint8_t tx_data_5_8_6020[8]{};
     osMutexAcquire(data_mutex_, osWaitForever);
     // 打包1-4号电机数据
-    // tmp0 = motor_currents_6020[0];
     for (size_t i = 1; i <= 4; i++) {
         auto current_3508 = motor_currents_3508[i - 1];
         auto current_6020 = motor_currents_6020[i - 1];
-        // 限幅
-        if (current_3508 > 16384)
-            current_3508 = 16384;
-        if (current_3508 < -16384)
-            current_3508 = -16384;
-        if (current_6020 > 16384)
-            current_6020 = 16384;
-        if (current_6020 < -16384)
-            current_6020 = -16384;
         auto data_pos_high = 2 * i - 2;
         auto data_pos_low = 2 * i - 1;
+        // 限幅
+        if (current_3508 > 16384) { current_3508 = 16384; }
+        if (current_3508 < -16384) { current_3508 = -16384; }
+        if (current_6020 > 16384) { current_6020 = 16384; }
+        if (current_6020 < -16384) { current_6020 = -16384; }
+
         tx_data_1_4_3508[data_pos_high] = current_3508 >> 8;
         tx_data_1_4_3508[data_pos_low] = current_3508 & 0xff;
         tx_data_1_4_6020[data_pos_high] = current_6020 >> 8;
@@ -77,24 +70,20 @@ void CanTxManager::sendCanMessages() {
     for (size_t i = 5; i <= 8; i++) {
         auto current_3508 = motor_currents_3508[i - 1];
         auto current_6020 = motor_currents_6020[i - 1];
-        if (current_3508 > 16384)
-            current_3508 = 16384;
-        if (current_3508 < -16384)
-            current_3508 = -16384;
-        if (current_6020 > 16384)
-            current_6020 = 16384;
-        if (current_6020 < -16384)
-            current_6020 = -16384;
         auto data_pos_high = 2 * (i - 4) - 2;
         auto data_pos_low = 2 * (i - 4) - 1;
+
+        if (current_3508 > 16384) { current_3508 = 16384; }
+        if (current_3508 < -16384) { current_3508 = -16384; }
+        if (current_6020 > 16384) { current_6020 = 16384; }
+        if (current_6020 < -16384) { current_6020 = -16384; }
+
         tx_data_5_8_3508[data_pos_high] = current_3508 >> 8;
         tx_data_5_8_3508[data_pos_low] = current_3508 & 0xff;
         tx_data_5_8_6020[data_pos_high] = current_6020 >> 8;
         tx_data_5_8_6020[data_pos_low] = current_6020 & 0xff;
     }
     osMutexRelease(data_mutex_);
-    // tmp1 = tx_data_1_4_6020[0];
-    // tmp2 = tx_data_1_4_6020[1];
     // 先不发5-8号电机数据
     header_3508.StdId = M3508_STDID_1_4;
     header_6020.StdId = M6020_STDID_1_4;
