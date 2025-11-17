@@ -54,7 +54,7 @@ void MotorManager::taskEntry() {
     }
 }
 
-void MotorManager::MotorManagerRTOSInit(const osThreadAttr_t* attr) {
+void MotorManager::RTOS_MotorManagerInit(const osThreadAttr_t* attr) {
     auto wrapper = [](void* arg) {
         auto* self = static_cast<MotorManager*>(arg);
         self->taskEntry();

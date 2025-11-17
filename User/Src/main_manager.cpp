@@ -3,8 +3,9 @@
 //
 
 #include "../Inc/main_manager.h"
+#include "MotorManager.h"
 #include "can.h"
-
+#include "usart.h"
 #include <cmath>
 
 MainManager::MainManager(const osThreadAttr_t* main_manager_attr
@@ -40,10 +41,10 @@ void MainManager::sysInit(const osThreadAttr_t* imu_task_attr,
     can_tx_manager.CanTxRtosInit(can_tx_manager_task_attr);
     // MotorManager 初始化
     auto& motor_manager = MotorManager::instance();
-    motor_manager.MotorManagerRTOSInit(motor_manager_attr);
+    motor_manager.RTOS_MotorManagerInit(motor_manager_attr);
     motor_manager.addMotor(&motor_yaw);
     motor_manager.addMotor(&motor_pitch);
-    motor_manager.RTOSInitAllMotor();
+    motor_manager.RTOS_InitAllMotor();
 
     // CAN 初始化
     HAL_CAN_ConfigFilter(&hcan1, hcan1_filter);

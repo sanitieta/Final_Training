@@ -16,7 +16,7 @@ public:
     void handleAll(); // 在任务中周期性调用所有motor的handle
     void stopAll(); // 停止所有电机
     void startAll(); // 启动所有电机
-    void MotorManagerRTOSInit(const osThreadAttr_t* attr);
+    void RTOS_MotorManagerInit(const osThreadAttr_t* attr);
 
 private:
     static MotorBase* motors_[8];
